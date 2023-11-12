@@ -6,9 +6,10 @@ let score = 0; // Track player score
 
 //HTML Elements
 const startButton = document.getElementById("start-button");
-const questionContainer = document.getElementById("question-container");
+const questionScreen = document.getElementById("question-screen");
 const choicesContainer = document.getElementById("choices-container");
 const timer = document.getElementById("timer");
+
 
 //Quiz questions
 const quizQuestions = [ // Created an array to store questions and answer choices
@@ -67,7 +68,7 @@ const quizQuestions = [ // Created an array to store questions and answer choice
 // Function for the Quiz
 function startQuiz() {
   startButton.classList.add("hidden"); // Adds class 'hidden' to button hidding it
-  questionContainer.classList.remove("hidden"); // Removes class 'hidden' from question conatiner
+  questionScreen.classList.remove("hidden"); // Removes class 'hidden' from question conatiner
   startTimer(); // Calls the startTimer function (need to create)
   displayQuestion(); // Calls the displayQuestion function (need to create)
 };
@@ -119,5 +120,13 @@ function startTimer() {
 
 // Ending the Quiz Function
 function endQuiz() {
-  clearInterval(timerInterval);
+  clearInterval(timerInterval); // Stop the timer Interval
+  questionScreen.classList.add("hidden"); // Class to hide the Question screen
+
+  const gameOverScreen = document.getElementById("game-over");
+  const finalScore = document.getElementById("final-score");
+  finalScore.textContent = score;
+  gameOverScreen.classList.remove("hidden");
 };
+
+startButton.addEventListener("click", startQuiz);
