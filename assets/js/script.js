@@ -63,3 +63,47 @@ const quizQuestions = [ // Created an array to store questions and answer choice
     answer: 1,
   },
 ];
+
+// Function for the Quiz
+function startQuiz() {
+  startButton.classList.add("hidden"); // Adds class 'hidden' to button hidding it
+  questionContainer.classList.remove("hidden"); // Removes class 'hidden' from question conatiner
+  startTimer(); // Calls the startTimer function (need to create)
+  displayQuestion(); // Calls the displayQuestion function (need to create)
+};
+
+// Function for Displaying a question
+function displayQuestion() {
+  const currentQuestion = quizQuestions[questionList];
+  const questionText = document.getElementById("question-text");
+  questionText.textContent = currentQuestion.question; // Sets text content of 'questionText' element to the value of the current question
+
+  for (let i = 0; i < currentQuestion.choices.length; i++) { // Loop iterating through each answer choice
+    const choiceButton = document.getElementById(`choice${i}`); // Selects HTML button by id and assigns it to the variable choiceButton
+    choiceButton.textContent = currentQuestion.choices[i]; // Text of selected button matched to answer choice of current index. Answers pulled from currentQuestion array
+    choiceButton.addEventListener("click", () => checkAnswer(i)); // Calls checkAnswer function
+  }
+};
+
+// Function to Check Answers
+function checkAnswer(selectedIndex) {
+
+  if(selectedIndex === currentQuestion.correctAnswer) {
+    score += 10; // Correct answer increase score
+  } else {
+    time -= 10; // Incorrect answers deduct time
+  }
+
+  questionList++; // Proceeds to the next question
+
+  if (questionList < quizQuestions.length) {
+    displayQuestion();
+  } else {
+    endQuiz();
+  };
+};
+
+// Timer Function
+function startTimer() {
+  timerInterval = setInterval(())
+};
