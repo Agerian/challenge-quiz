@@ -104,6 +104,20 @@ function checkAnswer(selectedIndex) {
 };
 
 // Timer Function
+function updateTimer()  {
+  if (time <= 0) { // If time is up, end the quiz
+    endQuiz();
+  } else {  // Update the timer display otherwise
+    timer.textContent = time;
+    time--;
+  }
+};
+
 function startTimer() {
-  timerInterval = setInterval(())
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
+// Ending the Quiz Function
+function endQuiz() {
+  clearInterval(timerInterval);
 };
