@@ -1,16 +1,3 @@
-// Variables & Constants
-let questionList = 0; // Track list of questions
-let time = 60; // Track time in seconds
-let timerInterval; // Will control the countdown
-let score = 0; // Track player score
-
-//HTML Elements
-const startButton = document.getElementById("start-button");
-const questionScreen = document.getElementById("question-screen");
-const choicesContainer = document.getElementById("choices-container");
-const timer = document.getElementById("timer");
-
-
 //Quiz questions
 const quizQuestions = [ // Created an array to store questions and answer choices
   {
@@ -65,31 +52,56 @@ const quizQuestions = [ // Created an array to store questions and answer choice
   },
 ];
 
+// Variables & Constants
+let questionList = 0; // Track list of questions
+let time = 60; // Track time in seconds
+let timerInterval; // Will control the countdown
+let score = 0; // Track player score
+
+//HTML Elements
+const startButton = document.getElementById("start-button");
+const questionScreen = document.getElementById("question-screen");
+const choicesContainer = document.getElementById("choices-container");
+const timer = document.getElementById("timer");
+const timeRemaining = document.getElementById("time-remaining");
+const questionText = document.getElementById("question-text");
+
 // Function for the Quiz
 function startQuiz() {
   startButton.classList.add("hidden"); // Adds class 'hidden' to button hidding it
   questionScreen.classList.remove("hidden"); // Removes class 'hidden' from question conatiner
+  timer.classList.remove("hidden");
   startTimer(); // Calls the startTimer function (need to create)
-  displayQuestion(); // Calls the displayQuestion function (need to create)
+  displayQuestion(0); // Calls the displayQuestion function (need to create)
 };
 
 // Function for Displaying a question
-function displayQuestion() {
-  const currentQuestion = quizQuestions[questionList];
-  const questionText = document.getElementById("question-text");
-  questionText.textContent = currentQuestion.question; // Sets text content of 'questionText' element to the value of the current question
+function displayQuestion(index) {
+  if (index < quizQuestions.length) {
+    questionText.textContent = 
+      `Question ${index + 1}: ${quizQuestions[index].question}`; //Template string to directly input question
+    choicesContainer.innerHTML = ""; // Clear buttons of text
+    
+    // For loop setting buttons with possible answer choices
+    for (let i = 0; i < quizQuestions[index].choices.length; i++) {
+      const choiceButton = document.createElement("button"); // Creates new buttons
+      choiceButton.textContent = quizQuestions[index].choices[i]; // Sets the text of the buttons based on the current question in the specified index, iterating through the possible choices for 'choices'
 
-  for (let i = 0; i < currentQuestion.choices.length; i++) { // Loop iterating through each answer choice
-    const choiceButton = document.getElementById(`choice${i}`); // Selects HTML button by id and assigns it to the variable choiceButton
-    choiceButton.textContent = currentQuestion.choices[i]; // Text of selected button matched to answer choice of current index. Answers pulled from currentQuestion array
-    choiceButton.addEventListener("click", () => checkAnswer(i)); // Calls checkAnswer function
+      choiceButton.addEventListener("click", function() { // Listen for click and calls function
+        const selectedChoice = i;
+        checkAnswer(index, selectedChoice); // Check question specified by index, 
+      });
+      choicesContainer.appendChild(choiceButton);
+    }
+  } else {
+    endQuiz();
   }
-};
+}
 
 // Function to Check Answers
-function checkAnswer(selectedIndex) {
+function checkAnswer(index, selectedChoice) {
 
-  if(selectedIndex === currentQuestion.correctAnswer) {
+  if(selectedChoice === quizQuestions[index].answer) {
     score += 10; // Correct answer increase score
   } else {
     time -= 10; // Incorrect answers deduct time
@@ -98,24 +110,22 @@ function checkAnswer(selectedIndex) {
   questionList++; // Proceeds to the next question
 
   if (questionList < quizQuestions.length) {
-    displayQuestion();
+    displayQuestion(questionList);
   } else {
     endQuiz();
   };
 };
 
 // Timer Function
-function updateTimer()  {
-  if (time <= 0) { // If time is up, end the quiz
-    endQuiz();
-  } else {  // Update the timer display otherwise
-    timer.textContent = time;
-    time--;
-  }
-};
-
 function startTimer() {
-  timerInterval = setInterval(updateTimer, 1000);
+  timerInterval = setInterval(function() {
+    timeRemaining.textContent = time;
+    
+    if (time <= 0) {
+      endQuiz();
+    }
+    time--;
+  }, 1000);
 }
 
 // Ending the Quiz Function
