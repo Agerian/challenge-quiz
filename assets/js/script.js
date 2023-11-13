@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
   ];
 
   // Variables & Constants
+  const highScores = [];
   let questionList = 0; // Track list of questions
   let time = 60; // Track time in seconds
   let timerInterval; // Will control the countdown
@@ -138,11 +139,39 @@ document.addEventListener("DOMContentLoaded", function () {
     questionScreen.classList.add("hidden"); // Class to hide the Question screen
     gameOver.style.display = "block";
     finalScore.textContent = score;
+
+    const userNameInput = document.getElementById("user-name");
+    const userName = userNameInput.value;
+    if (userName && score > 0) {
+      highScores.push({name: userName, score: score});
+      highScores.sort(function(a,b) {
+        return b.score - a.score;
+      });
+      updateHighScores();
+    }
   }
+
+  function updateHighScores() {
+    const highScoresList = document.getElementById("high-scores-list");
+    highScoresList.innerHTML = "";
+
+    for (let i = 0; i < highScores.length; i++) {
+      const highScoreEntry =  document.createElement("li");
+      highScoreEntry.textContent = `${highScores[i].name}: ${highScores[i].score}`;
+      highScoresList.appendChild(highScoreEntry);
+    }
+  }
+
+  const resetButton = document.getElementById("reset-quiz");
+  resetButton.addEventListener("click", function() {
+    highScores.length = 0;
+    updateHighScores();
+  })
 
   startButton.addEventListener("click", startQuiz);
 
-  highScore.addEventListener("submit", function(event) {
+  const highScoreForm = document.getElementById("high-score-input");
+  highScoreForm.addEventListener("submit", function(event) {
     event.preventDefault();
   });
 })
